@@ -9,6 +9,10 @@
 </p>
 
 <p align="center">
+  <strong>简体中文</strong> | <a href="./README_EN.md">English</a>
+</p>
+
+<p align="center">
   <a href="https://github.com/yaping-pro/xuesheng-desktop/releases/latest"><img src="https://img.shields.io/github/v/release/yaping-pro/xuesheng-desktop?color=blue&label=最新版本" alt="Release" /></a>
   <a href="https://github.com/yaping-pro/xuesheng-desktop/blob/main/LICENSE"><img src="https://img.shields.io/github/license/yaping-pro/xuesheng-desktop" alt="License" /></a>
   <img src="https://img.shields.io/badge/支持平台-macOS%20%7C%20Windows%20%7C%20Linux-brightgreen" alt="Platforms" />
