@@ -1,0 +1,23 @@
+name: 💡 新功能 / 优化建议
+description: 为学升桌面端提出新的功能设想或界面交互优化建议
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢为学升桌面端提出宝贵的建设性意见！
+  - type: textarea
+    id: feature
+    attributes:
+      label: 功能或优化概述
+      description: 描述您希望增加什么能力，或者现有体验有什么可以改进之处
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: 期望的呈现效果 / 解决方案
+      description: 您期望这个功能在桌面端如何呈现或交互
+    validations:
+      required: false

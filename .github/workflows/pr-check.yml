@@ -1,0 +1,26 @@
+name: PR Configuration Check
+
+on:
+  pull_request:
+    paths:
+      - "app.json"
+      - ".github/workflows/**"
+
+jobs:
+  validate-config:
+    name: 校验 app.json 配置
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 验证 JSON 语法完整性
+        run: |
+          python3 -c "
+          import json
+          with open('app.json', 'r', encoding='utf-8') as f:
+              data = json.load(f)
+          assert 'url' in data, 'Missing url field'
+          assert 'name' in data, 'Missing name field'
+          print('app.json 语法及必要字段校验通过:', data['name'], data['url'])
+          "

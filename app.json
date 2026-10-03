@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/tw93/Pake/main/schema/pake.schema.json",
+  "name": "XueSheng",
+  "url": "https://webapp.songy.info/#/home",
+  "icon": "https://webapp.songy.info/icons/Icon-192.png",
+  "width": 420,
+  "height": 840,
+  "minWidth": 380,
+  "minHeight": 640,
+  "hideTitleBar": false,
+  "newWindow": true
+}

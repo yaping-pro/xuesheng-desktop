@@ -1,0 +1,45 @@
+name: 🐛 Bug 反馈
+description: 提交在使用学升桌面端过程中遇到的问题或错误
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈问题！请尽量详细填写以下内容，帮助我们快速复现和定位。
+  - type: textarea
+    id: description
+    attributes:
+      label: 问题描述
+      description: 清楚简洁地描述遇到了什么异常情况
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 导致该问题发生的操作步骤
+      placeholder: |
+        1. 打开学升应用
+        2. 点击...
+        3. 发现...
+    validations:
+      required: true
+  - type: dropdown
+    id: mac_chip
+    attributes:
+      label: Mac 芯片架构
+      description: 您的 Mac 属于哪种芯片
+      options:
+        - "Apple Silicon (M1 / M2 / M3 / M4 系列)"
+        - "Intel 芯片 (老款 Mac)"
+        - "其他 / 不清楚"
+    validations:
+      required: true
+  - type: input
+    id: macos_version
+    attributes:
+      label: macOS 系统版本
+      placeholder: 例如 macOS 14.5 (Sonoma), macOS 15.0 (Sequoia)
+    validations:
+      required: true

@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Build artifacts
+*.dmg
+*.app
+*.deb
+*.AppImage
+*.msi
+dist/
+node_modules/
+
+# Logs
+*.log
