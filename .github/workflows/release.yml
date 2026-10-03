@@ -1,4 +1,4 @@
-name: Build and Release Universal DMG
+name: Build and Release Multi-Platform Desktop
 
 on:
   push:
@@ -7,67 +7,71 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: "Release Tag Name (e.g. v1.0.0)"
+        description: "Release Tag Name (e.g. v1.1.0)"
         required: true
-        default: "v1.0.0"
+        default: "v1.1.0"
 
 permissions:
   contents: write
 
 jobs:
-  build-and-release:
-    name: Build macOS Universal DMG
-    runs-on: macos-14
-    timeout-minutes: 25
+  build:
+    name: ${{ matrix.platform.name }}
+    runs-on: ${{ matrix.platform.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - name: macOS (Universal)
+            os: macos-14
+            args: --multi-arch --targets universal
+          - name: Windows (x64)
+            os: windows-latest
+            args: --targets x64
+          - name: Linux (deb, appimage)
+            os: ubuntu-22.04
+            args: --targets deb,appimage
 
     steps:
-      - name: 检出仓库代码
+      - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 安装 Node.js 22
+      - name: 配置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
 
-      - name: 安装 Rust 工具链及多架构 Target
+      - name: 安装 Rust 工具链
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-          targets: aarch64-apple-darwin,x86_64-apple-darwin
+          targets: ${{ matrix.platform.os == 'macos-14' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-      - name: 恢复 Cargo 编译缓存
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            src-tauri/target/
-          key: macos-cargo-universal-${{ hashFiles('app.json') }}
-          restore-keys: |
-            macos-cargo-universal-
+      - name: 安装 Linux 系统依赖
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev
 
       - name: 全局安装 Pake CLI
         run: npm install -g pake-cli
 
-      - name: 声明式打包 Universal DMG
+      - name: 声明式打包
+        shell: bash
         run: |
-          echo "Starting Pake build from app.json..."
-          pake --config app.json --multi-arch --targets universal --json
+          echo "Starting Pake build with args: ${{ matrix.platform.args }}"
+          pake --config app.json ${{ matrix.platform.args }} --json
 
-      - name: 归档本地构建产物
-        uses: actions/upload-artifact@v4
-        with:
-          name: XueSheng-Universal-DMG
-          path: "*.dmg"
-          retention-days: 14
-
-      - name: 发布至 GitHub Releases
+      - name: 发布产物至 GitHub Releases
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
-          files: "*.dmg"
+          files: |
+            *.dmg
+            *.msi
+            *.deb
+            *.AppImage
+          tag_name: ${{ github.ref_name || inputs.tag_name }}
           name: Release ${{ github.ref_name || inputs.tag_name }}
           draft: false
           prerelease: false
